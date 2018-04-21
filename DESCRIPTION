@@ -1,0 +1,14 @@
+Package: RSQLbuilder
+Type: Package
+Title: Tools for generating SQL queries from R
+Version: 0.1.0
+Author: Václav Hausenblas
+Maintainer: Václav Hausenblas <vaclav.hausenblas@gmail.com>
+Description: RSQLbuilder uses the power of R to write complex SQL queries.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    stringr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1
