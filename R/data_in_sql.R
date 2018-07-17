@@ -7,7 +7,7 @@
 #' @param separator specifies string to be used as delimiter in the SQL query (use any character/string that is not present in the data).
 #'
 #' @details
-#' Tested with PL/SQL.
+#' Tested with Oracle's PL/SQL.
 #'
 #' @return SQL query as a character value.
 #' @examples
@@ -26,10 +26,10 @@ csv_in_sql <- function(data, tab_name = "tbl", separator = "|") {
 
   regexp_part <-
     paste0(
-      paste0("  regexp_substr(", names(char_str), str_interp(", '(.*?)([${separator}]|$)', 1, level, null, 1)"), " AS ", names(char_str)),
+      paste0("  regexp_substr(", names(char_str), stringr::str_interp(", '(.*?)([${separator}]|$)', 1, level, null, 1)"), " AS ", names(char_str)),
       collapse = ",\n  ")
 
-  q <- str_interp(
+  q <- stringr::str_interp(
   "
 WITH
   ${tab_name}_concat AS (
