@@ -14,7 +14,19 @@
 #' # data(iris)
 #' # cat(csv_in_sql(iris))
 #' @export
-csv_in_sql <- function(data, tab_name = "tbl", separator = "|") {
+csv_in_sql <- function(data,
+                       tab_name = "tbl",
+                       separator = "|",
+                       dialect = "PLSQL",
+                       version = c("11g", "10g"),
+                       na.string = "") {
+
+  stopifnot(tolower(dialect) == "plsql")
+  version <- match.arg(version)
+
+  # data <- apply(data, 2, as.character)
+  data[is.na(data)] <- na.string
+
   # concatenate columns into char-separated string
   char_str <- sapply(data, paste, USE.NAMES = TRUE, collapse = separator)
 
@@ -26,11 +38,13 @@ csv_in_sql <- function(data, tab_name = "tbl", separator = "|") {
 
   regexp_part <-
     paste0(
-      paste0("  regexp_substr(", names(char_str), stringr::str_interp(", '(.*?)([${separator}]|$)', 1, level, null, 1)"), " AS ", names(char_str)),
-      collapse = ",\n  ")
+      if (version >= "11g")
+        paste0(          "  regexp_substr(", names(char_str), stringr::str_interp(", '(.*?)([${separator}]|$)', 1, level, null, 1)"),                   " AS ", names(char_str)) else
+          paste0("  replace(regexp_substr(", names(char_str), stringr::str_interp(", '(.*?)([${separator}]|$)', 1, level, null), '${separator}', '')"), " AS ", names(char_str)) ,
+      collapse = ",\n      ")
 
   q <- stringr::str_interp(
-  "
+    "
 WITH
   ${tab_name}_concat AS (
     SELECT
@@ -41,7 +55,8 @@ ${tab_name} AS (
     SELECT
       ${regexp_part}
     FROM ${tab_name}_concat
-    CONNECT BY level <= regexp_count(${names(char_str)[1]}, '[${separator}]')+1)
+    CONNECT BY level <= ${nrow(data)})
+    -- CONNECT BY level <= regexp_count(${names(char_str)[1]}, '[${separator}]')+1)
 select * from ${tab_name}
 ")
 

@@ -1,7 +1,7 @@
 Package: RSQLbuilder
 Type: Package
 Title: Tools for generating SQL queries from R
-Version: 0.1.0
+Version: 0.1.1
 Author: Václav Hausenblas
 Maintainer: Václav Hausenblas <vaclav.hausenblas@gmail.com>
 Description: RSQLbuilder uses the power of R to write complex SQL queries.

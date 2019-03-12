@@ -4,7 +4,8 @@
 \alias{csv_in_sql}
 \title{Embed CSV data in SQL}
 \usage{
-csv_in_sql(data, tab_name = "tbl", separator = "|")
+csv_in_sql(data, tab_name = "tbl", separator = "|", dialect = "PLSQL",
+  version = c("11g", "10g"))
 }
 \arguments{
 \item{data}{dataset to be translated}
@@ -20,7 +21,7 @@ SQL query as a character value.
 Translate a dataset into a plaintext SQL representation
 }
 \details{
-Tested with PL/SQL.
+Tested with Oracle's PL/SQL.
 }
 \examples{
 # data(iris)
